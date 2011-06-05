@@ -3,6 +3,7 @@
 # Py-Downloader Main Downloading Class
 #
 import os, sys, time, math
+import threading
 import urllib, urllib2
 import BeautifulSoup
 import progressBar
@@ -13,6 +14,16 @@ class session:
 		self.__opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
 #		self.__opener.addheaders = [("User-Agent", 
 		self.__download_prepared = False
+		self.__status_line = ""
+		self.__show_status = False
+
+	def __display_status_bar(self):
+		while self.__show_status:
+			sys.stdout.write("\r%s" % self.__status_line)
+			sys.stdout.flush()
+			time.sleep(0.2)
+		sys.stdout.write("\r%s" % self.__status_line)
+		sys.stdout.flush()
 
 	def __get_easy_file_size(self, content_length):
 		"""
@@ -81,6 +92,9 @@ class session:
 		last_size_check = 0
 		last_chunk_time = time.time()
 		last_line_len = 0
+		self.__show_status = True
+		self.__status_line = bar.get_bar(0)
+		threading.Thread(target=self.__display_status_bar, args=()).start()
 
 		while received_data_size != content_length:
 			# Update status
@@ -102,8 +116,7 @@ class session:
 				while len(line) < last_line_len:
 					line += " "
 				last_line_len = len(line)
-				sys.stdout.write(line)
-				sys.stdout.flush()
+				self.__status_line = line
 
 			# Get a chunk
 			received_chunk = response.read(1024)
@@ -115,6 +128,8 @@ class session:
 		line = "\r%s" % bar.get_bar(content_length)
 		while len(line) < last_line_len:
 			line += " "
-		sys.stdout.write(line)
-		sys.stdout.flush()
+		self.__status_line = line
+		self.__show_status = False
+		while threading.activeCount() > 1:
+			time.sleep(0.1)
 		print "\n[+] Download Complete!"
