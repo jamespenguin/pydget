@@ -32,6 +32,19 @@ class session:
 			count += 1
 		return "%.2f %s" % (content_length, unit)
 
+	def __seconds_to_HMS(self, seconds):
+		"""
+		Turn a given number of seconds into a nice human readable
+		HH:MM:SS format.
+		"""
+
+		hours = seconds / 3600
+		seconds -= 3600 * hours
+		minutes = seconds / 60
+		if not hours:
+			return "%02d:%02d" % (minutes, seconds)
+		return "%02d:%02d:%02d" % (hours, minutes, seconds)
+
 	def __prepare_download(self):
 		"""
 		Prepare the file to be downloaded, by selecting things like 
@@ -49,8 +62,11 @@ class session:
 		print "[+] Starting download for: %s" % self.__download_url
 
 		# Request the file, and process its meta data
+		sys.stdout.write("[+] Gathering meta data, ")
+		sys.stdout.flush()
 		response = self.__opener.open(self.__download_url)
 		meta_info = response.info()
+		print "Done"
                 content_length = int(response.headers["Content-Length"])
 		file_name = os.path.split(self.__download_url)[1]
 		file_name = urllib.unquote_plus(file_name)
@@ -68,12 +84,21 @@ class session:
 
 		while received_data_size != content_length:
 			# Update status
-			if time.time() - last_chunk_time >= 0.35:
+			if time.time() - last_chunk_time >= 0.25:
+				# calculate download speed
 				last_chunk_time = time.time()
 				download_speed = received_data_size - last_size_check
+				download_speed *= 4
+
+				# calculate remaining time
+				remaining_bytes = content_length - received_data_size
+				remaining_seconds = remaining_bytes / download_speed
+				remaining_string = self.__seconds_to_HMS(remaining_seconds)
+
+				# build status line
 				speed_string = "%s/s" % self.__get_easy_file_size(download_speed)
 				last_size_check = received_data_size
-				line = "\r[+] %s %s" % (bar.get_bar(received_data_size), speed_string)
+				line = "\r%s %s ETA: %s" % (bar.get_bar(received_data_size), speed_string, remaining_string)
 				while len(line) < last_line_len:
 					line += " "
 				last_line_len = len(line)
@@ -86,6 +111,10 @@ class session:
 			file_out.write(received_chunk)
 
 		file_out.close()
-		sys.stdout.write("\r[+] %s              " % bar.get_bar(content_length))
+
+		line = "\r%s" % bar.get_bar(content_length)
+		while len(line) < last_line_len:
+			line += " "
+		sys.stdout.write(line)
 		sys.stdout.flush()
 		print "\n[+] Download Complete!"
