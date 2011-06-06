@@ -37,6 +37,8 @@ class progressBar:
             if percent == 100:
                 piece = "O"
             bars = "=" * ((current * 50) / self.total)
+            if percent != 100:
+                bars += ">"
             bars += " " * (50 - len(bars))
         line = "[%s] %s (%d%%)" % (bars, piece, percent)
         return line
