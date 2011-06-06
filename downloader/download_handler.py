@@ -1,21 +1,23 @@
 #!/usr/bin/env python
 #
-# Py-Downloader Main Downloading Class
+# Pydget - Main Downloading Class
 #
 import os, sys, time, math
 import threading
-import urllib, urllib2
-import BeautifulSoup
+import urllib, urllib2, urlparse
 import progressBar
+import handlers.megaupload
 
 class session:
 	def __init__(self, download_url):
 		self.__download_url = download_url
+		self.__file_download_url = "" # The URL of the actual FILE to download
 		self.__opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
-#		self.__opener.addheaders = [("User-Agent", 
+		self.__opener.addheaders = [("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008092215 Firefox/3.0.1")]
 		self.__download_prepared = False
 		self.__status_line = ""
 		self.__show_status = False
+		self.__hosts = ["megaupload"]
 
 	def __display_status_bar(self):
 		while self.__show_status:
@@ -61,8 +63,34 @@ class session:
 		Prepare the file to be downloaded, by selecting things like 
 		"free" download mode, and waiting through any download timers.
 		"""
-		# Do some stuff
+
+		# determine what (if any) file hosting site the file is on
+		sys.stdout.write("[+] Determining file hosting site, ")
+		sys.stdout.flush()
+
+		url_host = urlparse.urlparse(self.__download_url)[1]
+		if url_host.startswith("www"):
+			url_host = url_host[4:]
+		url_host = url_host.split(".")[0]
+
+		if url_host not in self.__hosts:
+			print "Failed"
+			print "[!] File host not found in list of supported hosts."
+			return
+		print "Done"
+		print "[+] Host is: %s" % url_host.title()
+
+		# Prepare the file download
+		print "[+] Preparing file download"
+
+		if url_host == "megaupload":
+			file_download_url = handlers.megaupload.prepare_download(self.__opener, self.__download_url)
+			self.__file_download_url = file_download_url
+
+
 		self.__download_prepared = True
+
+#		self.__file_download_url = self.__download_url
 
 	def download_file(self):
 		"""
@@ -70,16 +98,18 @@ class session:
 		"""
 		if not self.__download_prepared:
 			self.__prepare_download()
-		print "[+] Starting download for: %s" % self.__download_url
+
+#		return
+		print "[+] Starting download for: %s" % self.__file_download_url
 
 		# Request the file, and process its meta data
 		sys.stdout.write("[+] Gathering meta data, ")
 		sys.stdout.flush()
-		response = self.__opener.open(self.__download_url)
+		response = self.__opener.open(self.__file_download_url)
 		meta_info = response.info()
 		print "Done"
                 content_length = int(response.headers["Content-Length"])
-		file_name = os.path.split(self.__download_url)[1]
+		file_name = os.path.split(self.__file_download_url)[1]
 		file_name = urllib.unquote_plus(file_name)
 		file_size = self.__get_easy_file_size(content_length)
 
