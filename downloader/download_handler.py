@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
-# Pydget - Main Downloading Class
+# Pydget -
+#   Global Downloading Handler Class
 #
 import os, sys, time, math
 import threading
@@ -100,17 +101,19 @@ class session:
 			self.__prepare_download()
 
 #		return
-		print "[+] Starting download for: %s" % self.__file_download_url
 
 		# Request the file, and process its meta data
+		file_name = os.path.split(self.__file_download_url)[1]
+		file_name = urllib.unquote_plus(file_name)
+		print "[+] Starting download for: %s" % file_name
+		# print self.__file_download_url
+
 		sys.stdout.write("[+] Gathering meta data, ")
 		sys.stdout.flush()
 		response = self.__opener.open(self.__file_download_url)
 		meta_info = response.info()
 		print "Done"
                 content_length = int(response.headers["Content-Length"])
-		file_name = os.path.split(self.__file_download_url)[1]
-		file_name = urllib.unquote_plus(file_name)
 		file_size = self.__get_easy_file_size(content_length)
 
 		# Download the file, and save it to disc
