@@ -20,7 +20,10 @@ import sys
 #download_url = "http://www.megaupload.com/?d=2A7OQPBC"
 
 # DepositFiles
-download_url = "http://depositfiles.com/files/syljwwe1v"
+#download_url = "http://depositfiles.com/files/syljwwe1v"
+
+# Hotfile
+download_url = "http://hotfile.com/dl/40926143/bfebc50/Linkin_Park_-_Meteora_-_01_-_Foreword.mp3.html"
 
 #!# End Config #!#
 

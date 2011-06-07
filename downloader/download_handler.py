@@ -1,14 +1,17 @@
 #!/usr/bin/env python
 #
 # Pydget -
-#   Global Downloading Handler Class
+#  Global Downloading Handler Class
 #
 import os, sys, time, math
 import threading
 import urllib, urllib2, urlparse
 import progressBar
+
+# Import specific file hosting site handlers
 import handlers.megaupload
 import handlers.depositfiles
+import handlers.hotfile
 
 class session:
 	def __init__(self, download_url):
@@ -19,7 +22,7 @@ class session:
 		self.__download_prepared = False
 		self.__status_line = ""
 		self.__show_status = False
-		self.__hosts = ["megaupload", "depositfiles"]
+		self.__hosts = ["megaupload", "depositfiles", "hotfile"]
 
 	def __display_status_bar(self):
 		while self.__show_status:
@@ -90,12 +93,11 @@ class session:
 			file_download_url = handlers.megaupload.prepare_download(self.__opener, self.__download_url)
 		elif url_host == "depositfiles":
 			file_download_url = handlers.depositfiles.prepare_download(self.__opener, self.__download_url)
+		elif url_host == "hotfile":
+			file_download_url = handlers.hotfile.prepare_download(self.__opener, self.__download_url)
 
 		self.__file_download_url = file_download_url
-
 		self.__download_prepared = True
-
-#		self.__file_download_url = self.__download_url
 
 	def download_file(self):
 		"""
