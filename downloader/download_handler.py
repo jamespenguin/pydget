@@ -53,12 +53,13 @@ class session:
 		HH:MM:SS format.
 		"""
 
-		hours = seconds / 3600
-		seconds -= 3600 * hours
 		minutes = seconds / 60
-		if not hours:
-			return "%02d:%02d" % (minutes, seconds)
-		return "%02d:%02d:%02d" % (hours, minutes, seconds)
+		remaining_seconds = seconds % 60
+		hours = minutes / 60
+		remaining_minutes = minutes % 60
+		if hours:
+        	        return "%02d:%02d:%02d" % (hours, remaining_minutes, remaining_seconds)
+		return "%02d:%02d" % (minutes, remaining_seconds)
 
 	def __prepare_download(self):
 		"""
