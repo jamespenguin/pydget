@@ -15,9 +15,12 @@ import sys
 # deb stuff
 #download_url = "http://www.megaupload.com/?d=C5SOA1FD"
 # mp3 test
-download_url = "http://www.megaupload.com/?d=Y9AQIX5V"
+#download_url = "http://www.megaupload.com/?d=Y9AQIX5V"
 # mp4 video test
 #download_url = "http://www.megaupload.com/?d=2A7OQPBC"
+
+# DepositFiles
+download_url = "http://depositfiles.com/files/syljwwe1v"
 
 #!# End Config #!#
 

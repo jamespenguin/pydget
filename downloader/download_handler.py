@@ -8,6 +8,7 @@ import threading
 import urllib, urllib2, urlparse
 import progressBar
 import handlers.megaupload
+import handlers.depositfiles
 
 class session:
 	def __init__(self, download_url):
@@ -18,7 +19,7 @@ class session:
 		self.__download_prepared = False
 		self.__status_line = ""
 		self.__show_status = False
-		self.__hosts = ["megaupload"]
+		self.__hosts = ["megaupload", "depositfiles"]
 
 	def __display_status_bar(self):
 		while self.__show_status:
@@ -86,8 +87,10 @@ class session:
 
 		if url_host == "megaupload":
 			file_download_url = handlers.megaupload.prepare_download(self.__opener, self.__download_url)
-			self.__file_download_url = file_download_url
+		elif url_host == "depositfiles":
+			file_download_url = handlers.depositfiles.prepare_download(self.__opener, self.__download_url)
 
+		self.__file_download_url = file_download_url
 
 		self.__download_prepared = True
 
