@@ -12,14 +12,18 @@ def prepare_download(opener, page_url):
 	# Get web page
 	sys.stdout.write("[+] Grabbing web page, ")
 	sys.stdout.flush()
-	page = opener.open(page_url)
+	page = opener.open(page_url).read()
 	print "Done"
+
+	a = open("page.html", "w")
+	a.write(page)
+	a.close()
 
 	# "click" the free download button
 	sys.stdout.write("[+] Grabbbing download page, ")
 	sys.stdout.flush()
 	soup = BeautifulSoup.BeautifulSoup(page)
-	form_action, data = form_grabber.process_form(soup, page_url, form_index=1)
+	form_action, data = form_grabber.process_form(soup, page_url, form_index=1, debug=True)
 	data["submit"] = "FREE downloading"
 	data = urllib.urlencode(data)
 	request = urllib2.Request(form_action, data)

@@ -5,6 +5,13 @@
 # By James Penguin (jamespenguin@gmail.com)
 #
 
+###
+# Config
+###
+bar_width = 40
+
+#!# end config #!#
+
 class progressBar:
     def __init__(self, total):
         self.total = total
@@ -23,23 +30,23 @@ class progressBar:
         if current == 0:
             percent = 0
             bars = ""
-            bars += " " * (50 - len(bars))
+            bars += " " * (bar_width - len(bars))
         elif current < 0:
             current *= -1
             if current == 1337:
                 current = 0
             percent = (current * 100) / self.total
-            bars = "=" * ((current * 50) / self.total)
-            bars += " " * (50 - len(bars))
+            bars = "=" * ((current * bar_width) / self.total)
+            bars += " " * (bar_width - len(bars))
             piece = "X"
         else:
             percent = (current * 100) / self.total
             if percent == 100:
                 piece = "O"
-            bars = "=" * ((current * 50) / self.total)
+            bars = "=" * ((current * bar_width) / self.total)
             if percent != 100:
                 bars += ">"
-            bars += " " * (50 - len(bars))
+            bars += " " * (bar_width - len(bars))
         line = "[%s] %s (%d%%)" % (bars, piece, percent)
         return line
 
