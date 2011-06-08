@@ -45,9 +45,9 @@ def prepare_download(opener, page_url):
 	soup = BeautifulSoup.BeautifulSoup(response)
 	print "Done"
 
-	a = open("page.html", "w")
-	a.write(response)
-	a.close()
+	if "You reached your hourly traffic limit." in response:
+		print "[!] Hourly traffic limit reached!"
+		return
 
 	# check for CAPTCHA
 	sys.stdout.write("[+] Processing CAPTCHA data, ")
