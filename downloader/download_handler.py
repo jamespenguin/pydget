@@ -61,7 +61,7 @@ class session:
 		hours = minutes / 60
 		remaining_minutes = minutes % 60
 		if hours:
-        	        return "%02d:%02d:%02d" % (hours, remaining_minutes, remaining_seconds)
+			return "%02d:%02d:%02d" % (hours, remaining_minutes, remaining_seconds)
 		return "%02d:%02d" % (minutes, remaining_seconds)
 
 	def __prepare_download(self):
@@ -71,6 +71,7 @@ class session:
 		"""
 
 		# determine what (if any) file hosting site the file is on
+		print "[+] Processing file URL: %s" % self.__download_url
 		sys.stdout.write("[+] Determining file hosting site, ")
 		sys.stdout.flush()
 
@@ -87,6 +88,7 @@ class session:
 		print "[+] Host is: %s" % url_host.title()
 
 		# Prepare the file download
+		print "-" * 50
 		print "[+] Preparing file download"
 
 		if url_host == "megaupload":
@@ -105,8 +107,7 @@ class session:
 		"""
 		if not self.__download_prepared:
 			self.__prepare_download()
-
-#		return
+		print "-" * 50
 
 		# Request the file, and process its meta data
 		file_name = os.path.split(self.__file_download_url)[1]
@@ -119,11 +120,11 @@ class session:
 		response = self.__opener.open(self.__file_download_url)
 		meta_info = response.info()
 		print "Done"
-                content_length = int(response.headers["Content-Length"])
+		content_length = int(response.headers["Content-Length"])
 		file_size = self.__get_easy_file_size(content_length)
 
 		# Download the file, and save it to disc
-                print "[+] Downloading file: %s (%s)" % (file_name, file_size)
+		print "[+] Downloading file: %s (%s)" % (file_name, file_size)
 		file_path = file_name # eventually make this changeable
 		file_out = open(file_path, "wb")
 		received_data_size = 0
