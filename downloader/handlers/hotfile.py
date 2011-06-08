@@ -41,14 +41,18 @@ def prepare_download(opener, page_url):
 	sys.stdout.flush()
 	data = urllib.urlencode(data)
 	request = urllib2.Request(form_action, data)
-	response = opener.open(request)
+	response = opener.open(request).read()
+	soup = BeautifulSoup.BeautifulSoup(response)
 	print "Done"
+
+	a = open("page.html", "w")
+	a.write(response)
+	a.close()
 
 	# check for CAPTCHA
 	sys.stdout.write("[+] Processing CAPTCHA data, ")
 	sys.stdout.flush()
 
-	soup = BeautifulSoup.BeautifulSoup(response)
 	form_action, data = form_grabber.process_form(soup, page_url, form_index=1)
 
 	captcha_iframe_url = soup.findAll("iframe")[0]["src"]

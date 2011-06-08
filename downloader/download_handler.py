@@ -161,7 +161,7 @@ class session:
 			received_chunk = response.read(1024)
 			received_data_size += len(received_chunk)
 			file_out.write(received_chunk)
-
+		response.close()
 		file_out.close()
 
 		line = "\r%s" % bar.get_bar(content_length)
