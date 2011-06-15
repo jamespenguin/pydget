@@ -34,6 +34,8 @@ def process_arguments():
 	parser = argparse.ArgumentParser(description="Pydget - Automate (for the most part) downloading files from file hosting websites!")
 	parser.add_argument("download_urls", metavar="URL", type=str, nargs="+",
 			    help="One or more URLs to download files from")
+	parser.add_argument("--pause", action="store_true", default=False,
+		    help="Wait for user input after a file finishes downloading, before beginning the next download.")
 	arguments = parser.parse_args()
 
 if __name__ == "__main__":
@@ -52,7 +54,11 @@ if __name__ == "__main__":
 			print "-" * 50
 			s = download_handler.session(url)
 			s.download_file()
-			print
+
+			if arguments.download_urls.index(url) != len(arguments.download_urls)-1:
+				if arguments.pause:
+					print "-" * 50
+					raw_input("[+] Press enter to start downloading next file...")
 	except KeyboardInterrupt:
 		print
 		sys.exit()
