@@ -25,10 +25,6 @@ def prepare_download(opener, page_url):
 	response = opener.open(request).read()
 	print "Done"
 
-	a = open("page.html", "w")
-	a.write(response)
-	a.close()
-
 	# Parse for file download URL
 	sys.stdout.write("[+] Parsing for file download URL, ")
 	sys.stdout.flush()
