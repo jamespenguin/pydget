@@ -3,7 +3,8 @@
 # Pydget -
 #  Main Interface Script
 #
-import sys, argparse
+import os, sys
+import argparse
 from downloader import download_handler
 
 ###
@@ -35,12 +36,26 @@ def process_arguments():
 	parser.add_argument("download_urls", metavar="URL", type=str, nargs="+",
 			    help="One or more URLs to download files from")
 	parser.add_argument("--pause", action="store_true", default=False,
-		    help="Wait for user input after a file finishes downloading, before beginning the next download.")
+			    help="Wait for user input after a file finishes downloading, before beginning the next download.")
+	parser.add_argument("--save-to", metavar="path", type=str, nargs=1, default=".",
+			    help="Save downloaded files to a specific folder.")
 	arguments = parser.parse_args()
 
 if __name__ == "__main__":
 	try:
+		# process arguments
 		process_arguments()
+
+		# resolve output path
+		if not os.path.exists(arguments.save_to[0]):
+			print "[+] Output path does not exist, will try and make it!"
+			try:
+				os.mkdir(arguments.save_to[0])
+			except:
+				print "[!] Failed to create output directory provided, exiting..."
+				sys.exit()
+
+		# download files :)
 		for url in arguments.download_urls:
 			index = arguments.download_urls.index(url) + 1
 			total = len(arguments.download_urls)
@@ -52,7 +67,7 @@ if __name__ == "__main__":
 			print line
 			print "=" * 70
 			print "-" * 50
-			s = download_handler.session(url)
+			s = download_handler.session(url, arguments.save_to[0])
 			s.download_file()
 
 			if arguments.download_urls.index(url) != len(arguments.download_urls)-1:
