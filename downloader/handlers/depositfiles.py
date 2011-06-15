@@ -12,23 +12,22 @@ def prepare_download(opener, page_url):
 	# Get web page
 	sys.stdout.write("[+] Grabbing web page, ")
 	sys.stdout.flush()
-	page = opener.open(page_url).read()
+	page = opener.open(page_url)	
 	print "Done"
 
-	a = open("page.html", "w")
-	a.write(page)
-	a.close()
-
 	# "click" the free download button
-	sys.stdout.write("[+] Grabbbing download page, ")
+	sys.stdout.write("[+] Requesting free download, ")
 	sys.stdout.flush()
-	soup = BeautifulSoup.BeautifulSoup(page)
-	form_action, data = form_grabber.process_form(soup, page_url, form_index=1, debug=True)
-	data["submit"] = "FREE downloading"
+	form_action = page.geturl()
+	data = {"gateway_result": "1"}
 	data = urllib.urlencode(data)
 	request = urllib2.Request(form_action, data)
 	response = opener.open(request).read()
 	print "Done"
+
+	a = open("page.html", "w")
+	a.write(response)
+	a.close()
 
 	# Parse for file download URL
 	sys.stdout.write("[+] Parsing for file download URL, ")
