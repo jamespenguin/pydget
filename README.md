@@ -24,8 +24,7 @@ Usage
 
     usage: pydget.py [-h] [--pause] [--save-to path] URL [URL ...]
     
-    Pydget - Automate (for the most part) downloading files from file hosting
-    websites!
+    Pydget - Automate (for the most part) downloading files from file hosting websites!
     
     positional arguments:
       URL             One or more URLs to download files from
