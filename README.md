@@ -3,6 +3,8 @@ Pydget
 
 Pydget is a Python powered application for (mostly) automating the process of downloading files from various file hosting websites.
 
+Also, Pydget was and still is developed primarily on an iPad using nano and a copy of Python compiled to run on iOS. 
+
 Supported Websites
 ------------------
 
