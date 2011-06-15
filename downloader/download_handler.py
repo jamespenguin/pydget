@@ -14,8 +14,9 @@ import handlers.depositfiles
 import handlers.hotfile
 
 class session:
-	def __init__(self, download_url):
+	def __init__(self, download_url, output_path):
 		self.__download_url = download_url
+		self.__output_path = output_path
 		self.__file_download_url = "" # The URL of the actual FILE to download
 		self.__opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
 		self.__opener.addheaders = [("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008092215 Firefox/3.0.1")]
@@ -94,7 +95,7 @@ class session:
 		if url_host == "megaupload":
 			file_download_url = handlers.megaupload.prepare_download(self.__opener, self.__download_url)
 		elif url_host == "depositfiles":
-			file_download_url = handlers.depositfiles.prepare_download(self.__opener, self.__download_url)
+			file_download_url, self.__old_url = handlers.depositfiles.prepare_download(self.__opener, self.__download_url)
 		elif url_host == "hotfile":
 			file_download_url = handlers.hotfile.prepare_download(self.__opener, self.__download_url)
 
@@ -110,7 +111,11 @@ class session:
 		print "-" * 50
 
 		# Request the file, and process its meta data
-		file_name = os.path.split(self.__file_download_url)[1]
+		file_name = ""
+		try:
+			file_name = os.path.split(self.__file_download_url)[1]
+		except:
+			file_name = os.path.split(self.__old_url)[1]
 		file_name = urllib.unquote_plus(file_name)
 		print "[+] Starting download for: %s" % file_name
 		# print self.__file_download_url
@@ -125,7 +130,7 @@ class session:
 
 		# Download the file, and save it to disc
 		print "[+] Downloading file: %s (%s)" % (file_name, file_size)
-		file_path = file_name # eventually make this changeable
+		file_path = os.path.join(self.__output_path, file_name)
 		file_out = open(file_path, "wb")
 		received_data_size = 0
 		bar = progressBar.progressBar(content_length)
