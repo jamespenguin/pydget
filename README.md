@@ -8,9 +8,9 @@ Supported Websites
 
 Pydget can be used to dwonload files from:
 
-* Depositfiles
-* Megaupload
-* Hotfile
+* [Depositfiles](http://depositfiles.com)
+* [Megaupload](http://megaupload.com)
+* [Hotfile](http://hotfile.com)
 
 TODO
 ----
@@ -18,6 +18,7 @@ TODO
 * Better command line and user interface stuff
 * Fine tune downloading scripts
 * Add support for more hosting websites
+* Automate CAPTCHA input using Decaptcher.com
 
 Usage
 -----
