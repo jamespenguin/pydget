@@ -12,6 +12,7 @@ import progressBar
 import handlers.megaupload
 import handlers.depositfiles
 import handlers.hotfile
+import handlers.oron
 
 class session:
 	def __init__(self, download_url, output_path):
@@ -23,7 +24,7 @@ class session:
 		self.__download_prepared = False
 		self.__status_line = ""
 		self.__show_status = False
-		self.__hosts = ["megaupload", "depositfiles", "hotfile"]
+		self.__hosts = ["megaupload", "depositfiles", "hotfile", "oron"]
 
 	def __display_status_bar(self):
 		while self.__show_status:
@@ -98,6 +99,8 @@ class session:
 			file_download_url, self.__old_url = handlers.depositfiles.prepare_download(self.__opener, self.__download_url)
 		elif url_host == "hotfile":
 			file_download_url = handlers.hotfile.prepare_download(self.__opener, self.__download_url)
+		elif url_host == "oron":
+			file_download_url = handlers.oron.prepare_download(self.__opener, self.__download_url)
 
 		self.__file_download_url = file_download_url
 		self.__download_prepared = True

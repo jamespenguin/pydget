@@ -18,15 +18,18 @@ arguments = None
 # deb stuff
 #download_url = "http://www.megaupload.com/?d=C5SOA1FD"
 # mp3 test
-download_url = "http://www.megaupload.com/?d=Y9AQIX5V"
+#download_url = "http://www.megaupload.com/?d=Y9AQIX5V"
 # mp4 video test
-download_url = "http://www.megaupload.com/?d=2A7OQPBC"
+#download_url = "http://www.megaupload.com/?d=2A7OQPBC"
 
 # DepositFiles
 #download_url = "http://depositfiles.com/files/syljwwe1v"
 
 # Hotfile
 #download_url = "http://hotfile.com/dl/40926143/bfebc50/Linkin_Park_-_Meteora_-_01_-_Foreword.mp3.html"
+
+# Oron
+download_url = "http://oron.com/whuctpz7kc1p/Linkin_Park_-_Waiting_For_The_End_%28DJ_Lynnwood_and_Dave_Dresden_Remix%29.mp3.html"
 
 #!# End Config #!#
 
