@@ -30,12 +30,17 @@ def prepare_download(opener, page_url):
 	request = urllib2.Request(form_action, data)
 	response = opener.open(request).read()
 	soup = BeautifulSoup.BeautifulSoup(response)
+
+	a = open("page11.html", "w")
+	a.write(response)
+	a.close()
+
 	print "Done"
 
-	## Wait the requisite nummber of seconds for free downloads
-	#print "[+] Waiting the required %d seconds" % wait_time
+	# Wait the required 60 seconds for free downloads
+	#print "[+] Waiting the required 60 seconds"
 	#last_line_length = 0
-	#for i in range(wait_time, -1, -1):
+	#for i in range(60, -1, -1):
 	#	line = "[+] Time remaining: %d seconds" % i
 	#	while len(line) < last_line_length:
 	#		line += " "
@@ -49,12 +54,17 @@ def prepare_download(opener, page_url):
 	sys.stdout.write("[+] Processing CAPTCHA data, ")
 	sys.stdout.flush()
 
-	form_action, data = form_grabber.process_form(soup, page_url, form_index=1)
+	print
+	print
+	#form_action, data = form_grabber.process_form(soup, page_url, form_index=1)
 
 	captcha_iframe_url = soup.findAll("iframe")[0]["src"]
 	captcha_iframe_page = opener.open(captcha_iframe_url).read()
 	captcha_iframe_soup = BeautifulSoup.BeautifulSoup(captcha_iframe_page)
-	form_action, data = form_grabber.process_form(captcha_iframe_soup, page_url)
+	form_action, data = form_grabber.process_form(captcha_iframe_soup, page_url, debug=True)
+
+	sys.exit()
+
 	captcha_image_url = captcha_iframe_soup.findAll("img")[0]["src"]
 	captcha_image_url = urlparse.urljoin(captcha_iframe_url, captcha_image_url)
 	captcha_image_data = opener.open(captcha_image_url).read()
@@ -69,7 +79,6 @@ def prepare_download(opener, page_url):
 	print "[+] Open image.jpg, and type in the words below"
 	captcha_answer = raw_input("[?] Answer: ")
 	data["recaptcha_response_field"] = captcha_answer
-	data["action"] = "checkcaptcha"
 
 	# post response
 	sys.stdout.write("[+] Sending CAPTCHA response to server, ")
@@ -77,6 +86,11 @@ def prepare_download(opener, page_url):
 	data = urllib.urlencode(data)
 	request = urllib2.Request(form_action, data)
 	response = opener.open(request).read()
+
+	a = open("page.html", "w")
+	a.write(response)
+	a.close()
+
 	if "Wrong Code. Please try again." in response:
 		print "Failed"
 		return
