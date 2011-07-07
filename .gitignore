@@ -5,3 +5,5 @@
 *.jpg
 .komodotools
 *.komodoproject
+*.html
+*.zip
