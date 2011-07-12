@@ -13,6 +13,7 @@ Pydget can be used to dwonload files from:
 * [Depositfiles](http://depositfiles.com)
 * [Megaupload](http://megaupload.com)
 * [Hotfile](http://hotfile.com)
+* [Filesonic](http://filesonic.com)
 
 TODO
 ----

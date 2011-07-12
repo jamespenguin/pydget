@@ -12,7 +12,8 @@ import progressBar
 import handlers.megaupload
 import handlers.depositfiles
 import handlers.hotfile
-import handlers.oron
+import handlers.oron # Not yet working
+import handlers.filesonic
 
 class session:
 	def __init__(self, download_url, output_path):
@@ -24,7 +25,9 @@ class session:
 		self.__download_prepared = False
 		self.__status_line = ""
 		self.__show_status = False
-		self.__hosts = ["megaupload", "depositfiles", "hotfile", "oron"]
+		self.__file_name = ""
+		self.__hosts = ["megaupload", "depositfiles", "hotfile", "oron",
+				"filesonic"]
 
 	def __display_status_bar(self):
 		while self.__show_status:
@@ -101,6 +104,9 @@ class session:
 			file_download_url = handlers.hotfile.prepare_download(self.__opener, self.__download_url)
 		elif url_host == "oron":
 			file_download_url = handlers.oron.prepare_download(self.__opener, self.__download_url)
+		elif url_host == "filesonic":
+			file_download_url, file_name = handlers.filesonic.prepare_download(self.__opener, self.__download_url)
+			self.__file_name = file_name
 
 		self.__file_download_url = file_download_url
 		self.__download_prepared = True
@@ -114,14 +120,13 @@ class session:
 		print "-" * 50
 
 		# Request the file, and process its meta data
-		file_name = ""
-		try:
-			file_name = os.path.split(self.__file_download_url)[1]
-		except:
-			file_name = os.path.split(self.__old_url)[1]
-		file_name = urllib.unquote_plus(file_name)
-		print "[+] Starting download for: %s" % file_name
-		# print self.__file_download_url
+		if not self.__file_name:
+			try:
+				self.__file_name = os.path.split(self.__file_download_url)[1]
+			except:
+				self.__file_name = os.path.split(self.__old_url)[1]
+			self.__file_name = urllib.unquote_plus(file_name)
+		print "[+] Starting download for: %s" % self.__file_name
 
 		sys.stdout.write("[+] Gathering meta data, ")
 		sys.stdout.flush()
@@ -132,8 +137,8 @@ class session:
 		file_size = self.__get_easy_file_size(content_length)
 
 		# Download the file, and save it to disc
-		print "[+] Downloading file: %s (%s)" % (file_name, file_size)
-		file_path = os.path.join(self.__output_path, file_name)
+		print "[+] Downloading file: %s (%s)" % (self.__file_name, file_size)
+		file_path = os.path.join(self.__output_path, self.__file_name)
 		file_out = open(file_path, "wb")
 		received_data_size = 0
 		bar = progressBar.progressBar(content_length)

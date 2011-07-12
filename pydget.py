@@ -29,7 +29,10 @@ arguments = None
 #download_url = "http://hotfile.com/dl/40926143/bfebc50/Linkin_Park_-_Meteora_-_01_-_Foreword.mp3.html"
 
 # Oron
-download_url = "http://oron.com/whuctpz7kc1p/Linkin_Park_-_Waiting_For_The_End_%28DJ_Lynnwood_and_Dave_Dresden_Remix%29.mp3.html"
+#download_url = "http://oron.com/whuctpz7kc1p/Linkin_Park_-_Waiting_For_The_End_%28DJ_Lynnwood_and_Dave_Dresden_Remix%29.mp3.html"
+
+# Filesonic
+download_url = "http://www.filesonic.com/file/1105360991/"
 
 #!# End Config #!#
 
